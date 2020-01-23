@@ -23,10 +23,10 @@ class CalcController {
 
     }
 
-    addEventListenerAll(element, events, fn) {
+    addEventListenerAll(elements, events, fn) {
 
         events.split(' ').forEach(event => {
-            element.addEventListener(event, fn, false)
+            elements.addEventListener(event, fn, false)
         })
 
     }
@@ -39,7 +39,7 @@ class CalcController {
 
     clearEntry() {
 
-        this._oparation.pop();
+        this._operation.pop();
 
     }
 
@@ -69,9 +69,8 @@ class CalcController {
 
         this._operation.push(value);
 
-        if (this._oparation.length > 3) {
+        if (this._operation.length > 3) {
 
-            let last = this._operation.pop()
             
             this.calc()
 
@@ -79,18 +78,30 @@ class CalcController {
 
     }
 
-    calc(value){
+    calc(){
 
         let last = this._operation.pop()
 
         let result = eval(this._operation.join(""))
 
         this._operation = [result,last]
+
+        this.setLastNumberToDisplay()
     }
 
     setLastNumberToDisplay(){
 
-        
+        let lastNumber;
+
+                    for(let i = this._operation.length-1; i >= 0; i--){
+
+                        if(!this.isOperator(this._operation[i])){
+                            lastNumber = this._operation[i]
+                            break
+                        }
+
+                    }
+                    this.displayCalc = lastNumber
 
     }
 
@@ -109,6 +120,8 @@ class CalcController {
             } else {
                 this.pushOperation(value);
 
+                this.setLastNumberToDisplay()
+
             }
 
         } else {
@@ -123,9 +136,6 @@ class CalcController {
                 this.setLastOperation(parseInt(newValue));
 
                 this.setLastNumberToDisplay()
-
-
-                
 
             }
 
@@ -260,7 +270,7 @@ class CalcController {
         return this._displayCalcEl.innerHTML;
     }
     set displayCalc(value) {
-        this._displayCalc = value;
+        this._displayCalcEl.innerHTML = value;
     }
     get currentDate() {
         return new Date();
