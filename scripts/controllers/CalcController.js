@@ -11,7 +11,9 @@ class CalcController {
         this._displayCalcEl = document.querySelector("#display");
         this._dateEl = document.querySelector("#data");
         this._timeEl = document.querySelector("#hora");
+
         this._currentDate;
+
         this.initialize();
         this.initButtonsEvents()
 
@@ -39,8 +41,16 @@ class CalcController {
     clearAll() {
 
         this._operation = [];
+        this._lastNumber = '';
+        this._lastOperator= '';
 
         this.setLastNumberToDisplay();
+
+
+
+        console.log(this._operation);
+        
+
 
     }
 
@@ -51,11 +61,6 @@ class CalcController {
         this.setLastNumberToDisplay();
     }
 
-    setError() {
-
-        this.displayCalc = "Error";
-
-    }
 
     getLastOperation() {
         return this._operation[this._operation.length - 1]
@@ -88,7 +93,9 @@ class CalcController {
 
     getResult(){
 
-        return eval(this._operation.join(""))
+        console.log('getResult', this._operation)
+
+        return eval(this._operation.join(""));
 
     }
 
@@ -97,6 +104,8 @@ class CalcController {
 
         let last = '';
         this._lastOperator = this.getLastItem();
+
+    
 
         if(this._operation.length < 3 ) {
 
@@ -108,21 +117,24 @@ class CalcController {
 
             last = this._operation.pop();
             this._lastNumber = this.getResult();
-        }else if(this._operation.length == 3) {
+        } else if(this._operation.length == 3) {
 
             this._lastNumber = this.getLastItem(false);
         }
 
+       console.log('_lastOperation', this._lastOperation);
+       console.log('_lastNumber', this._lastNumber);
        
+
         let result =  this.getResult()
 
-        if(last == '%'){
+        if(last === '%'){
 
             result/= 100
 
             this._operation = [result]
 
-        }else {
+        } else {
 
             this._operation = [result]
 
@@ -130,17 +142,17 @@ class CalcController {
 
         }
 
-
         this.setLastNumberToDisplay()
+        
     }
 
 
     getLastItem(isOperator = true){
         let lastItem;
 
-        for(let i = this._operation.length - 1; i >= 0; i--){
+        for(let i = this._operation.length-1; i >= 0; i--){
 
-            if(this.isOperator(this._operation[i]) == isOperator){
+            if(this.isOperator(this._operation[i]) === isOperator){
                 lastItem = this._operation[i];
                 break;
             }
@@ -150,8 +162,9 @@ class CalcController {
 
             lastItem = (isOperator) ? this._lastOperator : this._lastNumber
         }
-
         return lastItem;
+        
+        
     }
 
     setLastNumberToDisplay(){
@@ -160,7 +173,12 @@ class CalcController {
 
 
             if(!lastNumber) lastNumber = 0
+
             this.displayCalc = lastNumber
+
+            console.log(lastNumber)
+           
+            
 
     }
 
@@ -170,11 +188,6 @@ class CalcController {
 
             if (this.isOperator(value)) {
                 this.setLastOperation(value)
-
-            } else if (isNaN(value)) {
-                //outra coisa
-                console.log(value);
-
 
             } else {
                 this.pushOperation(value);
@@ -205,6 +218,16 @@ class CalcController {
 
     }
 
+    setError() {
+
+        this.displayCalc = "Error";
+
+    }
+
+    addDot(){
+
+    }
+
     execBtn(value) {
 
         switch (value) {
@@ -220,38 +243,38 @@ class CalcController {
                 break;
 
             case 'soma':
-                this.addOperation('+')
+                this.addOperation('+');
 
                 break;
 
             case 'subtracao':
-                this.addOperation('-')
+                this.addOperation('-');
 
                 break;
 
             case 'divisao':
-                this.addOperation('/')
+                this.addOperation('/');
 
                 break;
 
             case 'multiplicacao':
-                this.addOperation('*')
+                this.addOperation('*');
 
                 break;
 
             case 'porcento':
-                this.addOperation('%')
+                this.addOperation('%');
 
                 break;
 
             case 'ponto':
-                this.addOperation('ponto')
+                this.addDot('ponto');
 
                 break;
 
             case 'igual':
 
-                this.calc()
+                this.calc();
 
                 break;
 
@@ -330,6 +353,7 @@ class CalcController {
         return this._displayCalcEl.innerHTML;
     }
     set displayCalc(value) {
+        
         this._displayCalcEl.innerHTML = value;
     }
     get currentDate() {
