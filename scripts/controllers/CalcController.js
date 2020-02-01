@@ -45,10 +45,6 @@ class CalcController {
         this._lastOperator= '';
 
         this.setLastNumberToDisplay();
-
-
-
-        console.log(this._operation);
         
 
 
@@ -122,8 +118,6 @@ class CalcController {
             this._lastNumber = this.getLastItem(false);
         }
 
-       console.log('_lastOperation', this._lastOperation);
-       console.log('_lastNumber', this._lastNumber);
        
 
         let result =  this.getResult()
@@ -175,8 +169,6 @@ class CalcController {
             if(!lastNumber) lastNumber = 0
 
             this.displayCalc = lastNumber
-
-            console.log(lastNumber)
            
             
 
@@ -205,7 +197,7 @@ class CalcController {
             } else {
 
                 let newValue = this.getLastOperation().toString() + value.toString()
-                this.setLastOperation(parseInt(newValue));
+                this.setLastOperation(parseFloat(newValue));
 
                 this.setLastNumberToDisplay()
 
@@ -226,6 +218,15 @@ class CalcController {
 
     addDot(){
 
+        let lastOperation = this.getLastOperation()
+
+        if(this.isOperator(lastOperation) || !lastOperation){
+            this.pushOperation('0.');
+        } else {
+            this.setLastOperation(lastOperation.toString() + '.');
+        }
+
+        this.setLastNumberToDisplay();
     }
 
     execBtn(value) {
